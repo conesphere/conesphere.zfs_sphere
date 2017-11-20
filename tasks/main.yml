@@ -1,0 +1,11 @@
+---
+- name: check if pool already exists
+  shell: "zpool list | grep data"
+  args:
+    executable: /bin/bash
+  register: pool_status
+- name: create zfs pool
+  shell: "zpool create data{% for dev in storage[ansible_nodename]['mirror'] %}{{ loop.cycle(' mirror ', ' ') }}{{ dev }}{%- endfor %}{% if storage[ansible_nodename]['cache'] is defined %}cache {% for dev in cache %}{%- endfor %}{%- endif %}"
+  args:
+    executable: /bin/bash
+  when: "'data' in pool_status.stdout"
