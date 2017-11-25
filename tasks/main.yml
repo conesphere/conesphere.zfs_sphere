@@ -1,4 +1,6 @@
 ---
+- name: make sure zfs module is present
+  shell: modprobe zfs
 - name: check if pool already exists
   shell: "zpool list | grep data || true"
   args:
