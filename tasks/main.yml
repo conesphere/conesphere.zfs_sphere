@@ -1,4 +1,11 @@
 ---
+- name: make sure zfs is installed
+  apt:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - zfs-dkms
+    - zfsutils-linux
 - name: make sure zfs module is present
   shell: modprobe zfs
 - name: check if pool already exists
