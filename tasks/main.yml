@@ -1,6 +1,6 @@
 ---
 - name: check if pool already exists
-  shell: "zpool list | grep data"
+  shell: "zpool list | grep data || true"
   args:
     executable: /bin/bash
   register: pool_status
