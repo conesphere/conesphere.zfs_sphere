@@ -10,7 +10,7 @@
   shell: "zpool create data{% for dev in storage[ansible_nodename]['mirror'] %}{{ loop.cycle(' mirror ', ' ') }}{{ dev }}{%- endfor %}{% if storage[ansible_nodename]['cache'] is defined %} cache{% for dev in storage[ansible_nodename]['cache'] %} {{ dev }}{%- endfor %}{%- endif %}"
   args:
     executable: /bin/bash
-  when: "'data' not in pool_status.stdout and (storage[ansible_nodename]['crypt'] not defined or storage[ansible_nodename]['crypt'] != true )"
+  when: "'data' not in pool_status.stdout and (storage[ansible_nodename]['crypt'] is not defined or storage[ansible_nodename]['crypt'] != true)"
 - name: create zfs with encryption
   shell: "zpool create data{% for dev in storage[ansible_nodename]['mirror'] %}{{ loop.cycle(' mirror ', ' ') }}/dev/mapper/{{ dev | regex_replace('^/dev/', '')}}_crypt{%- endfor %}{% if storage[ansible_nodename]['cache'] is defined %} cache{% for dev in storage[ansible_nodename]['cache'] %} /dev/mapper/{{ dev | regex_replace('^/dev/', '')}}_crypt{%- endfor %}{%- endif %}"
   when: "'data' not in pool_status.stdout and storage[ansible_nodename]['crypt'] is defined and storage[ansible_nodename]['crypt']"
