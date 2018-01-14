@@ -6,8 +6,16 @@
   with_items:
     - zfs-dkms
     - zfsutils-linux
+- copy:
+   src: files/zfs-module.conf
+   dest: /etc/modules-load.d/zfs-module.conf
+   mode: "0644"
+   owner: root
+   group: root
+  register: zfs_module_conf_file
 - name: make sure zfs module is present
   shell: modprobe zfs
+  when: zfs_module_conf_file.changed
 - name: check if pool already exists
   shell: "zpool list | grep data || true"
   args:
