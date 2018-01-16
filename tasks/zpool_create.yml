@@ -5,8 +5,6 @@
     executable: /bin/bash
   register: zpool_status
   changed_when: False
-- debug:
-    msg: "{{ zpool_status }}"
 - name: create zfs pool
   shell: "zpool create {{ zpool_item.value.opts }} {{ zpool_item.key }} {{ zpool_item.value.vdev }}"
   args:
