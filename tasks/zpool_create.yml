@@ -1,0 +1,15 @@
+---
+- name: check if pool already exists
+  shell: "zpool list | grep -e '^{{ zpool_item.key }}' > /dev/null || echo -n 'not ' && echo -n 'present'"
+  args:
+    executable: /bin/bash
+  register: zpool_status
+  changed_when: False
+- debug:
+    msg: "{{ zpool_status }}"
+- name: create zfs pool
+  shell: "zpool create {{ zpool_item.value.opts }} {{ zpool_item.key }} {{ zpool_item.value.vdev }}"
+  args:
+    executable: /bin/bash
+  when: "'not present' in zpool_status.stdout"
+
