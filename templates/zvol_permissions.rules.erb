@@ -1,0 +1,4 @@
+# permissions for zfs volumes
+# /dev/zvol/data/vmdebootstrap
+ACTION=="add", SYMLINK=="zvol/${zvol}", MODE="0660", OWNER="${owner}"
+
