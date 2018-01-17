@@ -16,7 +16,15 @@
 - name: make sure zfs module is present
   shell: modprobe zfs
   when: zfs_module_conf_file.changed
+- name: Create zvol_permissions.rules if not existing
+  command: touch /etc/udev/rules.d/zvol_permissions.rules
+  args:
+    creates: /etc/udev/rules.d/zvol_permissions.rules
 - include_tasks: zpool_create.yml
   with_dict: "{{ zpool_create }}"
   loop_control:
     loop_var: zpool_item
+- include_tasks: zfs_create.yml
+  with_items: "{{ zfs_create }}"
+  loop_control:
+    loop_var: zfs_item

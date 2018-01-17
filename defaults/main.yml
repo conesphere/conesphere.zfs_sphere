@@ -1,7 +1,6 @@
 ---
 # defaults file for conesphere.cloud.createzfs/
 # examples by Zem
-storage:
-  example_host:
-    cache: foo
-    mirror: foo
+#
+zpool_create: {}
+zfs_create: []

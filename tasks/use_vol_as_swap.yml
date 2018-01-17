@@ -1,0 +1,13 @@
+---
+- name: mkswap
+  shell: "mkswap /dev/zvol/{{ zfs_item.name }}"
+  args:
+    executable: /bin/bash
+- lineinfile:
+    path: /etc/fstab
+    regexp: '^/dev/zvol/data/swap'
+    line: '/dev/zvol/data/swap   none   swap   sw   0   0'
+- name: swapon
+  shell: "swapon -a"
+  args:
+    executable: /bin/bash

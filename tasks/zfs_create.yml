@@ -1,0 +1,20 @@
+---
+- name: collect_zfs_fact
+  shell: "zfs list | grep -e '^{{ zfs_item.name }}' > /dev/null || echo -n 'not ' && echo -n 'present'"
+  args:
+    executable: /bin/bash
+  register: zfs_status
+  changed_when: False
+- lineinfile:
+    path: "/etc/udev/rules.d/zvol_permissions.rules"
+    regexp: 'SYMLINK=="zvol/{{ zfs_item.name }}"'
+    line: 'ACTION=="add", SYMLINK=="zvol/{{ zfs_item.name }}", MODE="0660", OWNER="{{ zfs_item.owner }}"'
+  when: "'owner' in zfs_item"
+- name: create zfs volume
+  shell: "zfs create {{ zfs_item.opts }} {{ zfs_item.name }}"
+  args:
+    executable: /bin/bash
+  when: "'not present' in zfs_status.stdout"
+- include_tasks: use_vol_as_swap.yml
+  when: "'use_as' in zfs_item and zfs_item.use_as == 'swap'"
+
