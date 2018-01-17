@@ -16,7 +16,7 @@
 - name: make sure zfs module is present
   shell: modprobe zfs
   when: zfs_module_conf_file.changed
-- import_tasks: zpool_create.yml
+- include_tasks: zpool_create.yml
   with_dict: "{{ zpool_create }}"
   loop_control:
     loop_var: zpool_item
