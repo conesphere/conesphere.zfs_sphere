@@ -16,5 +16,5 @@
     executable: /bin/bash
   when: "'not present' in zfs_status.stdout"
 - include_tasks: use_vol_as_swap.yml
-  when: "'use_as' in zfs_item and zfs_item.use_as == 'swap'"
+  when: "'use_as' in zfs_item and zfs_item.use_as == 'swap' and 'not present' in zfs_status.stdout"
 

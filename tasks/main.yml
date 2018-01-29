@@ -1,4 +1,21 @@
 ---
+# we will add a group zfsadm and make /dev/zfs be member of that group 
+# with this we can define zfs admin users who can make snapshots without 
+# having access to root filesystem and shadow 
+- group:
+    name: "zfsadm"
+    state: "present"
+- template:
+   dest: /etc/udev/rules.d/zfs_permissions.rules
+   src: templates/etc-udev-rules.d-zfs_permissions.rules.j2
+   owner: root
+   group: root
+   mode: "0644"
+  register: udev_zfs_permissions
+- service:
+    name: udev
+    state: restarted
+  when: udev_zfs_permissions.changed
 - name: make sure zfs is installed
   apt:
     name: "{{ item }}"
@@ -16,10 +33,6 @@
 - name: make sure zfs module is present
   shell: modprobe zfs
   when: zfs_module_conf_file.changed
-- name: Create zvol_permissions.rules if not existing
-  command: touch /etc/udev/rules.d/zvol_permissions.rules
-  args:
-    creates: /etc/udev/rules.d/zvol_permissions.rules
 - include_tasks: zpool_create.yml
   with_dict: "{{ zpool_create }}"
   loop_control:

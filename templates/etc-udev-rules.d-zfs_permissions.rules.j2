@@ -1,0 +1,2 @@
+# enable zfsadm group to maintain zfs filesystems not disk
+ACTION=="add", KERNEL=="zfs", MODE="0660", GROUP="zfsadm"
